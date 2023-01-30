@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../imgs/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal - Mahdiyeh Abbaspour</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Mahdiyeh Abbaspour's Fractal">
+    <meta name="keywords" content="Mahdiyeh Abbaspour, Fractal, AWS, HTML, CSS, JavaScript">
+    <meta name="author" content="Mahdiyeh-Abbaspour">
+
+    <meta property="og:title" content="Fractal">
+    <meta property="og:description" content="Mahdiyeh Abbaspour's  Fractal Drawing">
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+
+</head>
+<style>
+    body {
+        background-color: rgba(242, 244, 247, 0.15);
+    }
+    .text-center {
+        font-family: 'Nunito', sans-serif;
+        text-align: center;
+        justify-content: center;
+        margin: 2rem;
+    }
+</style>
+<body>
+<div class="text-center">
+    Enter a number: <br>
+    <input id="input" onkeydown="show(this)">
+
+</div>
+    <canvas id="canvas" height="500px" width="500px">
+    </canvas>
+<script>
+function show(ele) {
+    if(event.key === 'Enter') {
+        draw(ele.value);        
+    }
+}
+class Point2D {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+	midPoint (a){
+	return new Point2D(Math.round((a.x+this.x)/2),Math.round((a.y+this.y)/2))
+	}
+}
+function draw(order) {
+    h=window.innerHeight
+    w=window.innerWidth
+    const canvas = document.querySelector('#canvas');
+
+    if (!canvas.getContext) {
+        return;
+    }
+    const ctx = canvas.getContext('2d');
+
+    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+	
+ /*	alert(document.getElementById("canvas").clientWidth)
+	alert(document.getElementById("canvas").clientHeight)*/
+
+	h=h-50;
+	w=w-50;
+    // set line stroke and line width
+    ctx.strokeStyle = '#4B56D2';
+    ctx.fillStyle = 'blue';
+    ctx.lineWidth = 2;
+	const p1=new Point2D(w/2,2);
+	const p2=new Point2D(w-2,h-2);
+	const p3=new Point2D(2,h-2);
+	triangle(ctx,order,p1,p2,p3);
+
+	
+}
+function triangle(ctx,order,p1,p2,p3){
+    // draw a red line
+	if (order<0) 
+		return;
+	else if (order==0) {
+		ctx.beginPath();
+		ctx.moveTo(p1.x,p1.y);
+		ctx.lineTo(p2.x,p2.y);
+		ctx.lineTo(p3.x,p3.y);
+		ctx.lineTo(p1.x,p1.y);
+	/*	ctx.stroke();*/
+		ctx.fill()
+	} else {
+		const p12 = p1.midPoint(p2);
+		const p23 = p2.midPoint(p3);
+		const p31 = p3.midPoint(p1);
+        triangle(ctx,order - 1, p1, p12, p31);
+        triangle(ctx,order - 1, p12, p2, p23);
+        triangle(ctx,order - 1, p31, p23, p3);
+    }
+}
+</script>
+
+</body>
+
+</html>
